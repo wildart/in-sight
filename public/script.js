@@ -25,17 +25,6 @@ function _base64ToArrayBuffer(base64) {
 }
 
 function playByteArray(byteArray) {
-  // var arrayBuffer = new ArrayBuffer(byteArray.length);
-  // var bufferView = new Uint8Array(arrayBuffer);
-  // for (var i = 0; i < byteArray.length; i++) {
-  //   bufferView[i] = byteArray[i];
-  // }
-
-  // audiocontext.decodeAudioData(arrayBuffer, function(buffer) {
-  //     audiobuf = buffer;
-  //     play();
-  // });
-
   var buf = _base64ToArrayBuffer(byteArray);
   audiocontext.decodeAudioData(buf, function(buffer) {
     audiobuf = buffer;
@@ -90,31 +79,14 @@ socket.on('transcode', function (msg) {
   socket.emit('message', txt);
 });
 
-
-// socket.on('bot reply', function(replyText) {
-//   synthVoice(replyText);
-
-//   if(replyText == '') replyText = '(No answer...)';
-//   outputBot.textContent = replyText;
+// document.querySelector("[id='send']").addEventListener('click', () => {
+//   var txt = document.getElementsByName("chatbox")[0].value;
+//   output.appendChild(createDisplayNode(txt, "person"))
+//   console.log("sent: "+ txt);
+//   socket.emit('message', txt);
 // });
 
-document.querySelector("[id='send']").addEventListener('click', () => {
-  var txt = document.getElementsByName("chatbox")[0].value;
-  output.appendChild(createDisplayNode(txt, "person"))
-  console.log("sent: "+ txt);
-  socket.emit('message', txt);
-});
-
-// document.querySelector("[id='speech']").addEventListener('click', () => {
-//   var recorder = new RecordAudio(userMedia);
-//   recorder.start();
-//   recorder.stop();
-//   var recordedData = recorder.getData()
-//   console.log("sent: audio");
-//   socket.emit('audio', recordedData);
-// });
-
-
+var recording = false;
 var audioChunks = [];
 var rec;
 
@@ -135,30 +107,17 @@ if (navigator.getUserMedia) {
   alert('getUserMedia() is not supported in your browser');
 }
 
-// navigator.mediaDevices.getUserMedia({audio:true})
-// .then(stream => {
-//   rec = new MediaRecorder(stream);
-//   rec.ondataavailable = e => {
-//     audioChunks.push(e.data);
-//     if (rec.state == "inactive"){
-//       let blob = new Blob(audioChunks,{type:'audio/webm'});
-//       socket.emit('audio', blob);
-//    }
-//   }
-// })
-// .catch(e=>console.log(e));
-
-var recording = false;
-
 speech.onclick = e => {
   if (!recording) {
     audioChunks = [];
     recording = true;
-    status.textContent = "recording..."
+    // status.textContent = "recording...";
+    speech.style.backgroundColor = "#ff9999";
     rec.start();
   } else {
     recording = false;
     rec.stop();
-    status.textContent = ""
+    // status.textContent = "";
+    speech.style.backgroundColor = "Transparent";
   }
 }
